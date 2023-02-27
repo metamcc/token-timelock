@@ -3,6 +3,7 @@ package io.mcc.mobile.common.exception;
 import java.util.Locale;
 import java.util.Map;
 
+import io.mcc.common.vo.ResultCode;
 import io.mcc.mobile.common.config.oauth2.handler.CustomOauthException;
 import io.mcc.mobile.common.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import io.mcc.mobile.board.service.BoardNoticeService;
-
 import io.mcc.common.exception.BizException;
 import io.mcc.common.exception.RollbackException;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class ExceptionRestControllerAdvice extends ResponseEntityExceptionHandler {
 	
-	@Autowired
-	private BoardNoticeService noticeService;
+
 	
 	@Autowired
 	private MessageSource messageSource;
@@ -97,7 +95,7 @@ public class ExceptionRestControllerAdvice extends ResponseEntityExceptionHandle
 		log.error("===== NoSuchMessageException start...");
 		log.error("ExceptionHandler = {}", ex);
 		
-		ResponseVO vo = new ResponseVO(ResultCode.NO_MESSAGE_DATA.getCode(), ex.getMessage());
+		ResponseVO vo = new ResponseVO(ResultCode.NPE.getCode(), ex.getMessage());
 		return vo;
     }
 	

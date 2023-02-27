@@ -67,6 +67,18 @@ public class TestService {
 	}
 
 	/**
+	 * 이체가능 열매/토큰
+	 *
+	 * @param userSeq : 사용자일련번호
+	 * @return
+	 * @throws Exception
+	 */
+	public CommonVO getAvailableFruitData(long userSeq)
+	{
+		return getAvailableFruitData(userSeq, null);
+	}
+
+	/**
 	 * 실제 토큰 정보 조회
 	 *
 	 * @param userSeq : 사용자일련번호
@@ -85,14 +97,11 @@ public class TestService {
 			String hfbnWalletAddr = rstCVO.getString("hlf_wallet_addr");
 			if(!CommonUtils.isEmpty(mccWalletAddr) && !CommonUtils.isEmpty(hfbnWalletAddr))
 			{
-				int discordCnt = 0;
 				try
 				{
 					// 가장 작은 값을 보유 수량으로 보여줌
 					BigDecimal minQty = null;
-
-
-					// kct 총량
+					// kct 총량 (MCCX)
 					kctTotalQty = new BigDecimal(mCCTokenService.getBalanceOf(mccWalletAddr));
 
 					// kct를 기본으로
@@ -104,7 +113,6 @@ public class TestService {
 				catch(Exception e)
 				{
 					log.error("mcc balanceof error = {}",e);
-
 				}
 			}
 
@@ -150,7 +158,8 @@ public class TestService {
 		UserAgent rcvUserAgent = commFruitService.setRedisUserAgent(rcvUserSeq);
 		if(bAuthCheck)
 		{
-			//rcvUserAgent = commFruitService.chkInnerAuth(userAgent, rcvUserAgent);
+			//권한 체크시...실제저장된 권한 체크.
+			rcvUserAgent = commFruitService.chkInnerAuth(userAgent, rcvUserAgent);
 		}
 
 		if(sndUserSeq == rcvUserSeq) {
