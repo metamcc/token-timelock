@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.mcc.mobile.test.mapper.TestMapper">
+
+	<!-- 현재 내 사용가능한 열매 보유  -->
+	<select id="selectMyFruitData" resultType="CommonVO">
+		<![CDATA[
+		SELECT
+			pn.propose_no,
+			pn.propose_no AS myCode,
+			pn.nick_name,
+			pn.display_name,
+			uw.all_fruit_qty AS totalfruitQty,
+			IFNULL(fdh.transfer_fruit, 0) AS transferFruitQty,
+			IFNULL(tut.lock_amount, 0) as lockAmount,
+			if ((uw.all_fruit_qty - IFNULL(fdh.transfer_fruit, 0) - IFNULL(tut.lock_amount, 0))<0,0,
+				(uw.all_fruit_qty - IFNULL(fdh.transfer_fruit, 0) - IFNULL(tut.lock_amount, 0))) as availabilityFruitQty,
+			uw.mcc_wallet_addr,
+			uw.hlf_wallet_addr
+		FROM t_propose_no pn
+		JOIN t_user_wallet uw ON pn.user_seq = uw.user_seq
+		JOIN t_user u        ON pn.user_seq = u.user_seq
+		LEFT JOIN
+			 (
+				 SELECT
+					 user_seq, IFNULL(SUM(all_fruit_qty), 0) AS transfer_fruit
+				 FROM t_fruit_distb_hist
+				 WHERE
+					 user_seq = #{user_seq}
+				   AND
+					 distb_type_cd IN ('01' , '03')
+				   AND tran_status_cd = '03'
+				   AND token_trans_status_cd IN ('01' , '02')
+				 GROUP BY user_seq
+			 ) fdh ON pn.user_seq = fdh.user_seq
+		LEFT JOIN (
+			SELECT user_seq,lock_amount
+			from t_user_timelock
+			where user_seq = #{user_seq} and lock_time > now()
+			order by lock_time asc limit 1
+		) tut on pn.user_seq = tut.user_seq
+		WHERE pn.user_seq = #{user_seq}
+		]]>
+	</select>
+</mapper>
