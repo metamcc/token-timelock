@@ -11,3 +11,5 @@ MCCX token은 굿모닝 열매(Fruit)과 1:1 연동되어 동기화 되도록 �
 <img width="1855" alt="image" src="https://user-images.githubusercontent.com/109775055/221542058-cb23f6d6-09b6-4ebf-b8cd-281038c23c52.png">
 
 <img width="1855" alt="스크린샷 2023-02-27 오후 5 51 45" src="https://user-images.githubusercontent.com/109775055/221517972-8d6df27b-6c1a-43e6-becb-06dc128cd02d.png">
+
+<img width="1873" alt="스크린샷 2023-02-28 오전 8 59 22" src="https://user-images.githubusercontent.com/109775055/221716802-11dc8f6c-b8e9-4283-ad50-59b56935d005.png">
